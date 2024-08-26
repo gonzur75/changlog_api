@@ -1,9 +1,9 @@
 [tool.poetry]
-name = "changelogapi"
+name = "changelog"
 version = "0.1.0"
 description = ""
 authors = ["Marcin Włodarczyk <gonzur75@gmail.com>"]
-readme = "README.md"
+
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -12,5 +12,5 @@ fastapi = {extras = ["standard"], version = "^0.112.2"}
 
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core==1.8.3"]
 build-backend = "poetry.core.masonry.api"
