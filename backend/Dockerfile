@@ -24,7 +24,7 @@ COPY poetry.lock pyproject.toml ./
 RUN poetry install
 
 WORKDIR /app
-COPY ./changelog /appba
+COPY app /app
 
 EXPOSE 8000
 CMD ["fastapi", "run", "changelog/main.py"]

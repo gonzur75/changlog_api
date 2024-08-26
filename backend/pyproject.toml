@@ -9,6 +9,7 @@ authors = ["Marcin Włodarczyk <gonzur75@gmail.com>"]
 python = "^3.10"
 pre-commit = "^3.8.0"
 fastapi = {extras = ["standard"], version = "^0.112.2"}
+sqlalchemy = "^2.0.32"
 
 
 [build-system]
