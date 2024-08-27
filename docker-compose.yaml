@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "8000:8000"
+    restart: on-failure
+    volumes:
+      - ./backend:/app
+
+  db_changelog:
+    image: mysql
+    restart: on-failure
+    volumes:
+      - my_volume:/var/lib/mysql
+    env_file:
+      - ./.env
+    environment:
+
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+    ports:
+      - "3306:3306"
+
+volumes:
+  my_volume:
