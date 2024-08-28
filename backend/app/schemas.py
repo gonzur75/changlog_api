@@ -16,3 +16,12 @@ class User(UserBase):
     model_config = ConfigDict(from_attributes=True)
     id: UUID
     created_at: datetime
+
+
+class UserInDB(User):
+    hashed_password: str
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
