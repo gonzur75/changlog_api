@@ -25,4 +25,4 @@ COPY ./app ./app/app
 
 
 EXPOSE 8000
-CMD ["poetry", "run", "uvicorn", "app.main:app", "--reload"]
+CMD ["poetry", "run", "uvicorn", "app.main:app", "--reload", "--host", "0.0.0.0", "--port", "8000" ]
