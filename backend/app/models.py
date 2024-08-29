@@ -1,6 +1,5 @@
 import uuid
 from datetime import datetime
-from typing import Optional
 
 from sqlalchemy import ForeignKey, String, Uuid, func
 from sqlalchemy.orm import (
@@ -42,7 +41,7 @@ class User(CreatedAt, Base):
     username: Mapped[str] = mapped_column(String(255), nullable=False)
     hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
 
-    products: Mapped[Optional["Product"]] = relationship(
+    products: Mapped[list["Product"]] = relationship(
         back_populates="owner", cascade="all, delete"
     )
 

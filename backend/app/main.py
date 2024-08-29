@@ -9,3 +9,4 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 app.include_router(api_router, prefix="/api/v1")
+API_version_string = "/api/v1/"

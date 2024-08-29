@@ -22,16 +22,25 @@ def create_jwt_token(username):
     return jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
 
 
+def get_username_from_jwt(token):
+    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+    return payload.get("sub")
+
+
 def compare_password(password, hashed_password) -> bool:
     return bcrypt.checkpw(password.encode(), hashed_password)
 
 
 def authenticate_user(db, username, password):
-    from app.handlers.user import get_user_by_name
+    from app.handlers.user import get_user_by_username
 
-    user_db = get_user_by_name(db, username)
+    user_db = get_user_by_username(db, username)
     if not user_db:
         return None
     if not compare_password(password, user_db.hashed_password):
         return None
     return user_db
+
+
+def verify_jwt():
+    pass

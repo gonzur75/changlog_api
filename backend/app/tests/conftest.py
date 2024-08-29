@@ -57,6 +57,7 @@ def user_factory(session):
         class Meta:
             model = models.User
             sqlalchemy_session = session
+            sqlalchemy_session_persistence = "commit"
 
         username = factory.Sequence(lambda n: "User %d" % n)
         hashed_password = hash_password("secret123")
@@ -70,6 +71,7 @@ def product_factory(session, user_factory):
         class Meta:
             model = models.Product
             sqlalchemy_session = session
+            sqlalchemy_session_persistence = "commit"
 
         name = factory.Sequence(lambda n: "Product %d" % n)
         owner = factory.SubFactory(user_factory)

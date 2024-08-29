@@ -9,11 +9,12 @@ class ProductBase(BaseModel):
 
 
 class ProductCreate(ProductBase):
-    owner_id: UUID
+    pass
 
 
 class Product(ProductBase):
     model_config = ConfigDict(from_attributes=True)
+
     id: int
     owner_id: UUID
     created_at: datetime
@@ -45,3 +46,7 @@ class UserInDB(User):
 class Token(BaseModel):
     access_token: str
     token_type: str
+
+
+class TokenData(BaseModel):
+    username: str | None = None
