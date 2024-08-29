@@ -4,6 +4,21 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict
 
 
+class ProductBase(BaseModel):
+    name: str
+
+
+class ProductCreate(ProductBase):
+    owner_id: UUID
+
+
+class Product(ProductBase):
+    model_config = ConfigDict(from_attributes=True)
+    id: int
+    owner_id: UUID
+    created_at: datetime
+
+
 class UserBase(BaseModel):
     username: str
 
@@ -12,10 +27,15 @@ class UserCreate(UserBase):
     password: str
 
 
-class User(UserBase):
-    model_config = ConfigDict(from_attributes=True)
-    id: UUID
+class UserPublic(UserBase):
     created_at: datetime
+    id: UUID
+
+
+class User(UserPublic):
+    model_config = ConfigDict(from_attributes=True)
+
+    products: list[Product] = []
 
 
 class UserInDB(User):

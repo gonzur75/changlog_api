@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from app import handlers
 from app.schemas import UserCreate
-from app.tests.test_users import fake
+from app.tests.conftest import fake
 
 
 def test_create_user_in_db(session: Session) -> None:

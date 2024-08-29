@@ -1,8 +1,15 @@
 import uuid
 from datetime import datetime
+from typing import Optional
 
-from sqlalchemy import func, String, Uuid
-from sqlalchemy.orm import Mapped, DeclarativeBase, mapped_column, declared_attr
+from sqlalchemy import ForeignKey, String, Uuid, func
+from sqlalchemy.orm import (
+    DeclarativeBase,
+    Mapped,
+    declared_attr,
+    mapped_column,
+    relationship,
+)
 
 
 class Base(DeclarativeBase):
@@ -15,7 +22,7 @@ class CommonMixin:
 
     @declared_attr.directive
     def __tablename__(cls) -> str:
-        return cls.__name__.lower()
+        return cls.__name__.lower() + "s"
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
@@ -32,5 +39,15 @@ class User(CreatedAt, Base):
     __tablename__ = "users"
 
     id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4())
-    username: Mapped[str] = mapped_column(String(255))
-    hashed_password: Mapped[str] = mapped_column(String(255))
+    username: Mapped[str] = mapped_column(String(255), nullable=False)
+    hashed_password: Mapped[str] = mapped_column(String(255), nullable=False)
+
+    products: Mapped[Optional["Product"]] = relationship(
+        back_populates="owner", cascade="all, delete"
+    )
+
+
+class Product(CreatedAt, CommonMixin, Base):
+    name: Mapped[str] = mapped_column(String(50))
+    owner_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
+    owner: Mapped["User"] = relationship(back_populates="products")
