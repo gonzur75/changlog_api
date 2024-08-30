@@ -7,7 +7,7 @@ from jwt import InvalidTokenError
 from sqlalchemy.orm import Session
 from starlette import status
 
-from app import schemas
+from app import schemas, handlers
 from app.db import engine
 from app.handlers.user import get_user_by_username
 from app.modules.auth import get_username_from_jwt
@@ -53,3 +53,29 @@ async def get_current_active_user(
 
 
 CurrentUser = Annotated[schemas.User, Depends(get_current_active_user)]
+
+
+async def product_get(session: SessionDep, product_id):
+    db_product = handlers.get_product_by_id(session, product_id)
+    return db_product
+
+
+async def product_checked(
+    db_product: Annotated[schemas.Product, Depends(product_get)],
+    current_user: CurrentUser,
+):
+    if not db_product:
+        raise not_found_exception
+    if db_product.owner_id != current_user.id:
+        raise not_your_product_exception
+    return db_product
+
+
+ProductChecked = Annotated[schemas.Product, Depends(product_checked)]
+
+not_found_exception = HTTPException(
+    status_code=status.HTTP_404_NOT_FOUND, detail="Product not found"
+)
+not_your_product_exception = HTTPException(
+    status_code=status.HTTP_400_BAD_REQUEST, detail="Not your product"
+)

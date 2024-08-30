@@ -11,7 +11,7 @@ from app import models, schemas
 from app.api.dependencies import get_db
 from app.handlers import create_user
 from app.main import app
-from app.models import Base
+from app.models import Base, UpdateStatus
 from app.modules.auth import hash_password
 
 fake = Faker()
@@ -77,3 +77,20 @@ def product_factory(session, user_factory):
         owner = factory.SubFactory(user_factory)
 
     return ProductFactory
+
+
+@pytest.fixture
+def update_factory(session, product_factory):
+    class UpdateFactory(factory.alchemy.SQLAlchemyModelFactory):
+        class Meta:
+            model = models.Update
+            sqlalchemy_session = session
+            sqlalchemy_session_persistence = "commit"
+
+        title = factory.Sequence(lambda n: "Product Update %d" % n)
+        body = fake.text(max_nb_chars=255)
+        status = factory.Iterator(UpdateStatus)
+        version = factory.Sequence(lambda n: "0.0.%d" % n)
+        product = factory.SubFactory(product_factory)
+
+    return UpdateFactory

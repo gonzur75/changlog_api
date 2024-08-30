@@ -3,6 +3,8 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict
 
+from app import models
+
 
 class ProductBase(BaseModel):
     name: str
@@ -54,3 +56,36 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
+
+
+class UpdatePointBase(BaseModel):
+    name: str
+    description: str | None = None
+    point_type: str
+
+
+class UpdatePointCreate(UpdatePointBase):
+    pass
+
+
+class UpdatePoint(UpdatePointBase):
+    created_at: datetime
+    updated_at: datetime
+
+
+class UpdateBase(BaseModel):
+    title: str
+    body: str | None = None
+    status: models.UpdateStatus
+    version: str
+
+
+class UpdateCreate(UpdateBase):
+    pass
+
+
+class Update(UpdateBase):
+    created_at: datetime
+    updated_at: datetime
+    product: Product
+    points: list[UpdatePoint]

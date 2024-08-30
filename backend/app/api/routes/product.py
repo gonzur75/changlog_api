@@ -1,19 +1,21 @@
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from starlette import status
 
 from app import schemas, handlers
-from app.api.dependencies import SessionDep, CurrentUser
+from app.api.dependencies import (
+    SessionDep,
+    CurrentUser,
+    not_found_exception,
+    not_your_product_exception,
+)
+from app.api.routes import create_update
 from app.handlers.product import get_product_by_id
 
 router = APIRouter()
-not_found_exception = HTTPException(
-    status_code=status.HTTP_404_NOT_FOUND, detail="Product not found"
-)
-not_your_product_exception = HTTPException(
-    status_code=status.HTTP_400_BAD_REQUEST, detail="Not your product"
-)
+
+router.include_router(create_update.router, prefix="/{product_id}/updates")
 
 
 @router.patch("/{product_id}")

@@ -2,14 +2,8 @@ from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
 
 from app import handlers, schemas
-from app.modules.auth import create_jwt_token
 from app.main import API_version_string
-
-
-def get_test_auth_header_and_user(user_factory):
-    user = user_factory()
-    jwt_token = create_jwt_token(username=user.username)
-    return {"Authorization": f"Bearer {jwt_token}"}, user
+from app.tests.utils import get_test_auth_header_and_user
 
 
 def test_change_product_name(
