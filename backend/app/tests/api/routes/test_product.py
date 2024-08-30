@@ -1,19 +1,30 @@
 from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
 
-from app import models, handlers, schemas
+from app import handlers, schemas
 from app.modules.auth import create_jwt_token
 from app.main import API_version_string
 
 
-def get_test_auth_header(user_factory):
+def get_test_auth_header_and_user(user_factory):
     user = user_factory()
     jwt_token = create_jwt_token(username=user.username)
-    return {"Authorization": f"Bearer {jwt_token}"}
+    return {"Authorization": f"Bearer {jwt_token}"}, user
+
+
+def test_retrieve_products(client: TestClient, user_factory, product_factory) -> None:
+    headers, user = get_test_auth_header_and_user(user_factory)
+
+    product_factory.create_batch(10, owner=user)
+    response = client.get(f"{API_version_string}products/", headers=headers)
+
+    assert response.status_code == 200
+    content = response.json()
+    assert len(content["data"]) == 10
 
 
 def test_retrieve_product(client: TestClient, session: Session, user_factory) -> None:
-    headers = get_test_auth_header(user_factory)
+    headers, user = get_test_auth_header_and_user(user_factory)
 
     response_item_not_found = client.get(
         f"{API_version_string}products/1", headers=headers
@@ -21,8 +32,6 @@ def test_retrieve_product(client: TestClient, session: Session, user_factory) ->
     assert response_item_not_found.status_code == 404
     assert "Product not found" in response_item_not_found.text
 
-    user = session.query(models.User).first()
-    print(user.id)
     another_user = user_factory(username="User X")
 
     product = schemas.ProductCreate(name="Product1")
@@ -46,7 +55,7 @@ def test_retrieve_product(client: TestClient, session: Session, user_factory) ->
 
 
 def test_create_product(client: TestClient, user_factory) -> None:
-    jwt_token_header = get_test_auth_header(user_factory)
+    jwt_token_header = get_test_auth_header_and_user(user_factory)[0]
     test_json = {"name": "composting.web"}
     response = client.post(
         f"{API_version_string}products/", headers=jwt_token_header, json=test_json

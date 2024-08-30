@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, String, Uuid, func
+from sqlalchemy import ForeignKey, String, Uuid
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
@@ -31,7 +31,7 @@ class CreatedAt:
 
 
 class UpdatedAt:
-    updated_at: Mapped[datetime] = mapped_column(insert_default=func.now)
+    updated_at: Mapped[datetime] = mapped_column(insert_default=datetime.now)
 
 
 class User(CreatedAt, Base):

@@ -4,7 +4,7 @@ from app import models, schemas
 from app.modules.auth import hash_password
 
 
-def get_user_by_username(db: Session, username: str):
+def get_user_by_username(db: Session, username):
     return db.query(models.User).filter(models.User.username == username).first()
 
 

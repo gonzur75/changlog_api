@@ -20,6 +20,10 @@ class Product(ProductBase):
     created_at: datetime
 
 
+class Products(BaseModel):
+    data: list[Product]
+
+
 class UserBase(BaseModel):
     username: str
 
