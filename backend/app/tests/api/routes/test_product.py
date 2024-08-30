@@ -12,6 +12,22 @@ def get_test_auth_header_and_user(user_factory):
     return {"Authorization": f"Bearer {jwt_token}"}, user
 
 
+def test_change_product_name(
+    client: TestClient, session: Session, product_factory, user_factory
+):
+    header, user = get_test_auth_header_and_user(user_factory)
+    product = product_factory(owner=user)
+    test_json = {"name": "new name"}
+
+    response = client.patch(
+        f"{API_version_string}products/{product.id}", json=test_json, headers=header
+    )
+    assert response.status_code == 200
+
+    stored_product = handlers.get_product_by_id(session, product_id=product.id)
+    assert stored_product.name == test_json["name"]
+
+
 def test_retrieve_products(client: TestClient, user_factory, product_factory) -> None:
     headers, user = get_test_auth_header_and_user(user_factory)
 
