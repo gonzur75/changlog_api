@@ -10,12 +10,12 @@ from app.api.dependencies import (
     not_found_exception,
     not_your_product_exception,
 )
-from app.api.routes import create_update
+from app.api.routes import product_updates
 from app.handlers.product import get_product_by_id
 
 router = APIRouter()
 
-router.include_router(create_update.router, prefix="/{product_id}/updates")
+router.include_router(product_updates.router, prefix="/{product_id}/updates")
 
 
 @router.patch("/{product_id}")

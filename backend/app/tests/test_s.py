@@ -7,6 +7,22 @@ from app.main import API_version_string
 from app.tests.utils import get_test_auth_header_and_user
 
 
+def test_get_product_updates(
+    client: TestClient, session: Session, user_factory, product_factory, update_factory
+):
+    headers, user = get_test_auth_header_and_user(user_factory)
+    product = product_factory(owner=user)
+    update_factory.create_batch(10, product=product)
+    response = client.get(
+        f"{API_version_string}products/{product.id}/updates/",
+        headers=headers,
+    )
+    assert response.status_code == 200
+    content = response.json()
+    print(content)
+    assert len(content) == 10
+
+
 def test_delete_update(
     client: TestClient, session: Session, user_factory, product_factory, update_factory
 ):
