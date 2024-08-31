@@ -73,9 +73,34 @@ async def product_checked(
 
 ProductChecked = Annotated[schemas.Product, Depends(product_checked)]
 
+
+def not_your_resource(resource_name):
+    return HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail=f"You have no access to {resource_name}",
+    )
+
+
 not_found_exception = HTTPException(
-    status_code=status.HTTP_404_NOT_FOUND, detail="Product not found"
+    status_code=status.HTTP_404_NOT_FOUND, detail="Resource not found!"
 )
 not_your_product_exception = HTTPException(
     status_code=status.HTTP_400_BAD_REQUEST, detail="Not your product"
 )
+
+
+async def get_update(session: SessionDep, update_id):
+    return handlers.get_update_by_id(session, update_id)
+
+
+async def get_update_checked(
+    update: Annotated[schemas.Update, Depends(get_update)], current_user: CurrentUser
+):
+    if not update:
+        raise not_found_exception
+    if update.product.owner_id != current_user.id:
+        raise not_your_resource(update.title)
+    return update
+
+
+UpdateCheckedDep = Annotated[schemas.Update, Depends(get_update_checked)]

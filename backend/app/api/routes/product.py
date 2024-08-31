@@ -62,4 +62,5 @@ async def retrieve_product(
         raise not_found_exception
     if product.owner_id != current_user.id:
         raise not_your_product_exception
+
     return product

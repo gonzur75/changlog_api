@@ -84,7 +84,15 @@ class UpdateCreate(UpdateBase):
     pass
 
 
+class UpdatePatch(BaseModel):
+    title: str | None = None
+    body: str | None = None
+    status: models.UpdateStatus | None = None
+    version: str | None = None
+
+
 class Update(UpdateBase):
+    id: int
     created_at: datetime
     updated_at: datetime
     product: Product

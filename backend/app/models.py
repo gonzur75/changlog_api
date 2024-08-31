@@ -3,7 +3,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-from sqlalchemy import ForeignKey, String, Uuid
+from sqlalchemy import ForeignKey, String, Uuid, func
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
@@ -49,7 +49,9 @@ class CreatedAt:
 
 
 class UpdatedAt:
-    updated_at: Mapped[datetime] = mapped_column(insert_default=datetime.now)
+    updated_at: Mapped[datetime] = mapped_column(
+        insert_default=func.now(), onupdate=func.current_timestamp()
+    )
 
 
 class User(CreatedAt, Base):
