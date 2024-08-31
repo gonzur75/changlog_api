@@ -2,7 +2,6 @@ from collections.abc import Generator
 from typing import Annotated
 
 from fastapi import Depends, HTTPException
-from fastapi.security import OAuth2PasswordBearer
 from jwt import InvalidTokenError
 from sqlalchemy.orm import Session
 from starlette import status
@@ -10,7 +9,7 @@ from starlette import status
 from app import schemas, handlers, models
 from app.db import engine
 from app.handlers.user import get_user_by_username
-from app.modules.auth import get_username_from_jwt
+from app.modules.auth import get_username_from_jwt, oauth2_scheme
 
 
 def get_db() -> Generator[Session, None, None]:
@@ -19,8 +18,6 @@ def get_db() -> Generator[Session, None, None]:
 
 
 SessionDep = Annotated[Session, Depends(get_db)]
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="signin")
 
 
 async def get_current_user(

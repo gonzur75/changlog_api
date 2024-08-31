@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 
 import bcrypt
 import jwt
+from fastapi.security import OAuth2PasswordBearer
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 ALGORITHM = os.environ.get("ALGORITHM")
@@ -42,5 +43,5 @@ def authenticate_user(db, username, password):
     return user_db
 
 
-def verify_jwt():
-    pass
+API_version_string = "/api/v1/"
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{API_version_string}signin/")

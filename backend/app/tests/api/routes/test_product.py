@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
 
 from app import handlers, schemas
-from app.main import API_version_string
+from app.modules.auth import API_version_string
 from app.tests.utils import get_test_auth_header_and_user
 
 

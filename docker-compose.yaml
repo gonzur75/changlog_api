@@ -1,19 +1,4 @@
 services:
-  backend:
-    build:
-      context: ./backend
-    env_file:
-      - ./.env
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db_changelog
-    restart: on-failure
-    volumes:
-      - ./backend:/app
-    networks:
-      - backend_network
-
   db_changelog:
     image: mysql
     restart: on-failure
@@ -31,6 +16,24 @@ services:
       - "3306:3306"
     networks:
       - backend_network
+
+  backend:
+    build:
+      context: ./backend
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db_changelog
+    restart: on-failure
+    volumes:
+      - ./backend:/app
+    networks:
+      - backend_network
+
+
 
 
 volumes:
