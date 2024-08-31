@@ -6,6 +6,16 @@ from app.api.dependencies import UpdateCheckedDep, SessionDep
 router = APIRouter()
 
 
+@router.delete("/{update_id}")
+async def delete_update(
+    session: SessionDep,
+    update: UpdateCheckedDep,
+):
+    session.delete(update)
+    session.commit()
+    return {"message": "Success"}
+
+
 @router.patch("/{update_id}", response_model=schemas.Update)
 async def patch_update(
     session: SessionDep, stored_update: UpdateCheckedDep, update_in: schemas.UpdatePatch

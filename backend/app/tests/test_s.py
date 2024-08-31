@@ -1,9 +1,24 @@
 import factory
+from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
 
-from app import schemas
+from app import schemas, models
 from app.main import API_version_string
 from app.tests.utils import get_test_auth_header_and_user
+
+
+def test_delete_update(
+    client: TestClient, session: Session, user_factory, product_factory, update_factory
+):
+    headers, user = get_test_auth_header_and_user(user_factory)
+    product = product_factory(owner=user)
+    update = update_factory(product=product)
+    response = client.delete(
+        f"{API_version_string}updates/{update.id}", headers=headers
+    )
+    assert response.status_code == 200
+    check = session.query(models.Update).filter(models.Update.id == update.id).first()
+    assert check is None
 
 
 def test_modify_update(
