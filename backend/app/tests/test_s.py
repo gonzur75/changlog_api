@@ -7,8 +7,48 @@ from app.main import API_version_string
 from app.tests.utils import get_test_auth_header_and_user
 
 
+def test_retrieve_update_points(
+    client: TestClient,
+    user_factory,
+    product_factory,
+    update_factory,
+    update_point_factory,
+):
+    headers, user = get_test_auth_header_and_user(user_factory)
+    product = product_factory(owner=user)
+    update = update_factory(product=product)
+    update_point_factory.create_batch(10, update=update)
+    response = client.get(
+        f"{API_version_string}updates/{update.id}/points/", headers=headers
+    )
+    assert response.status_code == 200
+    assert len(response.json())
+
+
+def test_add_update_point(
+    client: TestClient,
+    user_factory,
+    product_factory,
+    update_factory,
+    update_point_factory,
+):
+    headers, user = get_test_auth_header_and_user(user_factory)
+    product = product_factory(owner=user)
+    update = update_factory(product=product)
+    json = factory.build(dict, FACTORY_CLASS=update_point_factory)
+    json.pop("update")
+
+    response = client.post(
+        f"{API_version_string}updates/{update.id}/points/", headers=headers, json=json
+    )
+
+    assert response.status_code == 200
+    content = response.json()
+    assert content["name"] == json["name"]
+
+
 def test_get_product_updates(
-    client: TestClient, session: Session, user_factory, product_factory, update_factory
+    client: TestClient, user_factory, product_factory, update_factory
 ):
     headers, user = get_test_auth_header_and_user(user_factory)
     product = product_factory(owner=user)
@@ -19,7 +59,6 @@ def test_get_product_updates(
     )
     assert response.status_code == 200
     content = response.json()
-    print(content)
     assert len(content) == 10
 
 

@@ -61,7 +61,7 @@ class TokenData(BaseModel):
 class UpdatePointBase(BaseModel):
     name: str
     description: str | None = None
-    point_type: str
+    type: models.UpdatePointType
 
 
 class UpdatePointCreate(UpdatePointBase):

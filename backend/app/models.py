@@ -95,5 +95,5 @@ class UpdatePoint(CreatedAt, UpdatedAt, CommonMixin, Base):
     name: Mapped[str] = mapped_column(String(50))
     description: Mapped[Optional[str]] = mapped_column(String(255))
     update_id: Mapped[int] = mapped_column(ForeignKey("updates.id"))
-    point_type: Mapped[UpdatePointType]
+    type: Mapped[UpdatePointType]
     update: Mapped["Update"] = relationship(back_populates="points")

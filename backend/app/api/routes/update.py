@@ -2,8 +2,10 @@ from fastapi import APIRouter
 
 from app import schemas, models
 from app.api.dependencies import UpdateCheckedDep, SessionDep
+from app.api.routes import update_points
 
 router = APIRouter()
+router.include_router(update_points.router, prefix="/{update_id}/points")
 
 
 @router.delete("/{update_id}")
