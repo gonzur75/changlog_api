@@ -58,21 +58,6 @@ class TokenData(BaseModel):
     username: str | None = None
 
 
-class UpdatePointBase(BaseModel):
-    name: str
-    description: str | None = None
-    type: models.UpdatePointType
-
-
-class UpdatePointCreate(UpdatePointBase):
-    pass
-
-
-class UpdatePoint(UpdatePointBase):
-    created_at: datetime
-    updated_at: datetime
-
-
 class UpdateBase(BaseModel):
     title: str
     body: str | None = None
@@ -92,8 +77,43 @@ class UpdatePatch(BaseModel):
 
 
 class Update(UpdateBase):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     created_at: datetime
     updated_at: datetime
     product: Product
-    points: list[UpdatePoint]
+    points: list["UpdatePoint"]
+
+
+class UpdatePointBase(BaseModel):
+    name: str
+    description: str | None = None
+    type: models.UpdatePointType
+
+
+class UpdatePointPatch(BaseModel):
+    name: str | None
+    description: str | None = None
+    type: models.UpdatePointType | None
+
+
+class UpdatePointCreate(UpdatePointBase):
+    pass
+
+
+class UpdatePoint(UpdatePointBase):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    update_id: int
+
+
+class SingleUpdatePoint(UpdatePoint):
+    update: Update
+
+
+class Message(BaseModel):
+    message: str

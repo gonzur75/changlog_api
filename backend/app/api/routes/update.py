@@ -15,7 +15,7 @@ async def delete_update(
 ):
     session.delete(update)
     session.commit()
-    return {"message": "Success"}
+    return schemas.Message(message="Item deleted successfully")
 
 
 @router.patch("/{update_id}", response_model=schemas.Update)

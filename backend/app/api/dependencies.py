@@ -7,7 +7,7 @@ from jwt import InvalidTokenError
 from sqlalchemy.orm import Session
 from starlette import status
 
-from app import schemas, handlers
+from app import schemas, handlers, models
 from app.db import engine
 from app.handlers.user import get_user_by_username
 from app.modules.auth import get_username_from_jwt
@@ -104,3 +104,25 @@ async def get_update_checked(
 
 
 UpdateCheckedDep = Annotated[schemas.Update, Depends(get_update_checked)]
+
+
+async def get_point(session: SessionDep, point_id):
+    return (
+        session.query(models.UpdatePoint)
+        .filter(models.UpdatePoint.id == point_id)
+        .first()
+    )
+
+
+async def get_point_checked(
+    point: Annotated[schemas.UpdatePoint, Depends(get_point)], current_user: CurrentUser
+):
+    if not point:
+        raise not_found_exception
+    if point.update.product.owner_id != current_user.id:
+        raise not_your_resource(point.name)
+
+    return point
+
+
+PointCheckedDep = Annotated[schemas.UpdatePoint, Depends(get_point_checked)]
