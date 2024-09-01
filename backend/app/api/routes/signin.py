@@ -4,11 +4,12 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
 
+from app import enums
 from app.api.dependencies import SessionDep
 from app.modules.auth import authenticate_user, create_jwt_token
 from app.schemas import Token
 
-router = APIRouter()
+router = APIRouter(prefix="/signin", tags=[enums.RouterTags.users])
 
 
 @router.post("/")

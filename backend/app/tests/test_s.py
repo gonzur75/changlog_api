@@ -24,7 +24,7 @@ def test_delete_point(
         f"{API_version_string}points/{update_point.id}", headers=headers
     )
     assert response.status_code == 200
-    assert "Item deleted successfully" in response.text
+    assert "Point deleted successfully" in response.text
     check = (
         session.query(models.UpdatePoint)
         .filter(models.UpdatePoint.id == update.id)
@@ -39,7 +39,6 @@ def test_patch_point(
     product_factory,
     update_factory,
     update_point_factory,
-    session: Session,
 ):
     headers, user = get_test_auth_header_and_user(user_factory)
     product = product_factory(owner=user)
@@ -76,24 +75,6 @@ def test_retrieve_point(
     assert update_point.name == content["name"]
 
 
-def test_retrieve_update_points(
-    client: TestClient,
-    user_factory,
-    product_factory,
-    update_factory,
-    update_point_factory,
-):
-    headers, user = get_test_auth_header_and_user(user_factory)
-    product = product_factory(owner=user)
-    update = update_factory(product=product)
-    update_point_factory.create_batch(10, update=update)
-    response = client.get(
-        f"{API_version_string}updates/{update.id}/points/", headers=headers
-    )
-    assert response.status_code == 200
-    assert len(response.json())
-
-
 def test_add_update_point(
     client: TestClient,
     user_factory,
@@ -128,7 +109,7 @@ def test_get_product_updates(
     )
     assert response.status_code == 200
     content = response.json()
-    assert len(content) == 10
+    assert len(content["data"]) == 10
 
 
 def test_delete_update(

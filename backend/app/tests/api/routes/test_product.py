@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
 
-from app import handlers, schemas
+from app import handlers, schemas, enums
 from app.modules.auth import API_version_string
 from app.tests.utils import get_test_auth_header_and_user
 
@@ -40,7 +40,7 @@ def test_retrieve_product(client: TestClient, session: Session, user_factory) ->
         f"{API_version_string}products/1", headers=headers
     )
     assert response_item_not_found.status_code == 404
-    assert "Product not found" in response_item_not_found.text
+    assert enums.ExceptionMessages.not_found in response_item_not_found.text
 
     another_user = user_factory(username="User X")
 
@@ -71,7 +71,7 @@ def test_create_product(client: TestClient, user_factory) -> None:
         f"{API_version_string}products/", headers=jwt_token_header, json=test_json
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     content = response.json()
     assert content["name"] == test_json["name"]
     assert "id" in content

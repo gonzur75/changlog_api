@@ -102,6 +102,9 @@ class UpdatePoints(Update):
 
 
 class Updates(BaseModel):
+    total: int
+    page: int
+    size: int
     data: list[UpdatePoints]
 
 
@@ -120,9 +123,9 @@ class UpdatePointBase(BaseModel):
 
 
 class UpdatePointPatch(BaseModel):
-    name: Annotated[str | None, update_points_name]
-    description: Annotated[str | None, update_point_description]
-    type: models.UpdatePointType | None
+    name: Annotated[str | None, update_points_name] = None
+    description: Annotated[str | None, update_point_description] = None
+    type: models.UpdatePointType | None = None
 
 
 class UpdatePointCreate(UpdatePointBase):

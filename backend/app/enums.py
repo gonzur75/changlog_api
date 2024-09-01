@@ -23,5 +23,9 @@ class UpdateExample(str, Enum):
     )
 
 
-class ProductExample:
+class ProductExample(str, Enum):
     name = "ChangelogAPI"
+
+
+class ExceptionMessages(str, Enum):
+    not_found = "Resource not found!"
