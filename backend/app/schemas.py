@@ -1,13 +1,15 @@
+from pydantic import Field
 from datetime import datetime
+from typing import Annotated
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict
 
-from app import models
+from app import models, enums
 
 
 class ProductBase(BaseModel):
-    name: str
+    name: Annotated[str, Field(min_length=3, max_length=50)]
 
 
 class ProductCreate(ProductBase):
@@ -59,10 +61,10 @@ class TokenData(BaseModel):
 
 
 class UpdateBase(BaseModel):
-    title: str
-    body: str | None = None
+    title: Annotated[str, Field(min_length=3, max_length=50)]
+    body: Annotated[str | None, Field(max_length=255)] = None
     status: models.UpdateStatus
-    version: str
+    version: Annotated[str, Field(max_length=50)]
 
 
 class UpdateCreate(UpdateBase):
@@ -86,15 +88,23 @@ class Update(UpdateBase):
     points: list["UpdatePoint"]
 
 
+update_points_name = Field(
+    min_length=3, max_length=50, examples=[enums.PointExample.name]
+)
+update_point_description = Field(
+    max_length=255, examples=[enums.PointExample.description]
+)
+
+
 class UpdatePointBase(BaseModel):
-    name: str
-    description: str | None = None
+    name: Annotated[str, update_points_name]
+    description: Annotated[str | None, update_point_description]
     type: models.UpdatePointType
 
 
 class UpdatePointPatch(BaseModel):
-    name: str | None
-    description: str | None = None
+    name: Annotated[str | None, update_points_name]
+    description: Annotated[str | None, update_point_description]
     type: models.UpdatePointType | None
 
 
@@ -111,9 +121,5 @@ class UpdatePoint(UpdatePointBase):
     update_id: int
 
 
-class SingleUpdatePoint(UpdatePoint):
-    update: Update
-
-
 class Message(BaseModel):
-    message: str
+    message: Annotated[str, Field(examples=["Success"])]

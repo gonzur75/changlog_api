@@ -7,7 +7,11 @@ from fastapi.security import OAuth2PasswordBearer
 
 SECRET_KEY = os.environ.get("SECRET_KEY")
 ALGORITHM = os.environ.get("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 300
+
+
+API_version_string = "/api/v1/"
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{API_version_string}signin")
 
 
 def hash_password(password) -> str:
@@ -41,7 +45,3 @@ def authenticate_user(db, username, password):
     if not compare_password(password=password, hashed_password=user_db.hashed_password):
         return None
     return user_db
-
-
-API_version_string = "/api/v1/"
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{API_version_string}signin/")

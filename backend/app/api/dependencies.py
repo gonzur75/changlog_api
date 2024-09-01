@@ -1,7 +1,7 @@
 from collections.abc import Generator
 from typing import Annotated
 
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Path
 from jwt import InvalidTokenError
 from sqlalchemy.orm import Session
 from starlette import status
@@ -103,7 +103,10 @@ async def get_update_checked(
 UpdateCheckedDep = Annotated[schemas.Update, Depends(get_update_checked)]
 
 
-async def get_point(session: SessionDep, point_id):
+async def get_point(
+    session: SessionDep,
+    point_id: Annotated[int, Path(title="The ID of the update point to get", ge=1)],
+):
     return (
         session.query(models.UpdatePoint)
         .filter(models.UpdatePoint.id == point_id)
