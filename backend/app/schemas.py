@@ -60,11 +60,15 @@ class TokenData(BaseModel):
     username: str | None = None
 
 
+update_title = Field(min_length=3, max_length=50, examples=[enums.UpdateExample.title])
+update_body = Field(max_length=255, examples=[enums.UpdateExample.body])
+
+
 class UpdateBase(BaseModel):
-    title: Annotated[str, Field(min_length=3, max_length=50)]
-    body: Annotated[str | None, Field(max_length=255)] = None
+    title: Annotated[str, update_title]
+    body: Annotated[str | None, update_body] = None
     status: models.UpdateStatus
-    version: Annotated[str, Field(max_length=50)]
+    version: Annotated[str, Field(max_length=50, examples=["0.112.2"])]
 
 
 class UpdateCreate(UpdateBase):
@@ -72,10 +76,10 @@ class UpdateCreate(UpdateBase):
 
 
 class UpdatePatch(BaseModel):
-    title: str | None = None
-    body: str | None = None
-    status: models.UpdateStatus | None = None
-    version: str | None = None
+    title: Annotated[str, update_title] = None
+    body: Annotated[str | None, update_body] = None
+    status: models.UpdateStatus = None
+    version: Annotated[str, Field(max_length=50, examples=["0.112.2"])] = None
 
 
 class Update(UpdateBase):

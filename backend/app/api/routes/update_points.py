@@ -3,11 +3,12 @@ from fastapi import APIRouter
 from app import schemas, models
 from app.api.dependencies import SessionDep, UpdateCheckedDep
 
-router = APIRouter()
+router = APIRouter(prefix="/{update_id}/points")
 
 
 @router.get("/", response_model=list[schemas.UpdatePoint])
 async def update_points(update: UpdateCheckedDep):
+    """Retrieve a point"""
     return update.points
 
 

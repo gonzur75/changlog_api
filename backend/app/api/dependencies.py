@@ -86,7 +86,9 @@ not_your_product_exception = HTTPException(
 )
 
 
-async def get_update(session: SessionDep, update_id):
+async def get_update(
+    session: SessionDep, update_id: Annotated[int, Path(title="ID of update", ge=1)]
+):
     return handlers.get_update_by_id(session, update_id)
 
 
@@ -105,7 +107,7 @@ UpdateCheckedDep = Annotated[schemas.Update, Depends(get_update_checked)]
 
 async def get_point(
     session: SessionDep,
-    point_id: Annotated[int, Path(title="The ID of the update point to get", ge=1)],
+    point_id: Annotated[int, Path(title="ID of update point", ge=1)],
 ):
     return (
         session.query(models.UpdatePoint)

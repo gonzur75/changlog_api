@@ -1,31 +1,27 @@
 from fastapi import APIRouter
 
-from app import schemas, models
+from app import schemas, models, enums
 from app.api.dependencies import PointCheckedDep, SessionDep
-from app.enums import RouterTags
-
-router = APIRouter(prefix="/points", tags=[RouterTags.points])
 
 
-@router.get("/{point_id}", response_model=schemas.UpdatePoint, summary="Retrieve point")
-async def retrieve_point(point: PointCheckedDep):
-    """
-    Retrieve a point
-    """
+router = APIRouter(prefix="/points", tags=[enums.RouterTags.points])
+
+
+@router.get("/{point_id}", summary="Retrieve point")
+async def retrieve_point(point: PointCheckedDep) -> schemas.UpdatePoint:
+    """Retrieve a point"""
 
     return point
 
 
-@router.patch(
-    "/{point_id}", response_model=schemas.UpdatePoint, summary="Update point data"
-)
+@router.patch("/{point_id}", summary="Modify point data")
 async def update_point(
     stored_point: PointCheckedDep,
     session: SessionDep,
     point_in: schemas.UpdatePointPatch,
-):
+) -> schemas.UpdatePoint:
     """
-    Update point (fields are optional) with:
+    Update point (all fields are optional) with:
     - **name**: point name
     - **description**: a long description
     - **type**: a typ of point
@@ -46,9 +42,7 @@ async def delete_point(
     stored_point: PointCheckedDep,
     session: SessionDep,
 ) -> schemas.Message:
-    """
-    Delete point
-    """
+    """Delete point"""
     session.delete(stored_point)
     session.commit()
-    return schemas.Message(message="Item deleted successfully")
+    return schemas.Message(message="Point deleted successfully")

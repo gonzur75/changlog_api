@@ -1,27 +1,32 @@
 from fastapi import APIRouter
 
-from app import schemas, models
+from app import schemas, models, enums
 from app.api.dependencies import UpdateCheckedDep, SessionDep
 from app.api.routes import update_points
 
-router = APIRouter()
-router.include_router(update_points.router, prefix="/{update_id}/points")
+router = APIRouter(prefix="/updates", tags=[enums.RouterTags.update])
+router.include_router(update_points.router)
 
 
-@router.delete("/{update_id}")
-async def delete_update(
-    session: SessionDep,
-    update: UpdateCheckedDep,
-):
-    session.delete(update)
-    session.commit()
-    return schemas.Message(message="Item deleted successfully")
+@router.get("/{update_id}", summary="Retrieve update")
+async def retrieve_update(update: UpdateCheckedDep) -> schemas.Update:
+    """Retrieve a update"""
+
+    return update
 
 
-@router.patch("/{update_id}", response_model=schemas.Update)
+@router.patch("/{update_id}", summary="Modify update data")
 async def patch_update(
     session: SessionDep, stored_update: UpdateCheckedDep, update_in: schemas.UpdatePatch
-):
+) -> schemas.Update:
+    """
+    Modify update (all fields are optional) with:
+    - **title**: update title
+    - **body**: some more info about update
+    - **status**: update status (in_progress, in_review etc)
+    - **version**: version
+    """
+
     update_data = update_in.model_dump(exclude_unset=True)
     update_query = session.query(models.Update).filter(
         models.Update.id == stored_update.id
@@ -32,6 +37,12 @@ async def patch_update(
     return stored_update
 
 
-@router.get("/{update_id}", response_model=schemas.Update)
-async def retrieve_update(update: UpdateCheckedDep):
-    return update
+@router.delete("/{update_id}", summary="Delete update")
+async def delete_update(
+    session: SessionDep,
+    update: UpdateCheckedDep,
+) -> schemas.Message:
+    """Delete point"""
+    session.delete(update)
+    session.commit()
+    return schemas.Message(message="Update deleted successfully")
