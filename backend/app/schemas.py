@@ -7,9 +7,11 @@ from pydantic import BaseModel, ConfigDict
 
 from app import models, enums
 
+product_name = Field(min_length=3, max_length=50, examples=[enums.ProductExample.name])
+
 
 class ProductBase(BaseModel):
-    name: Annotated[str, Field(min_length=3, max_length=50)]
+    name: Annotated[str, product_name]
 
 
 class ProductCreate(ProductBase):
@@ -22,6 +24,10 @@ class Product(ProductBase):
     id: int
     owner_id: UUID
     created_at: datetime
+
+
+class ProductUpdates(Product):
+    updates: list["Update"]
 
 
 class Products(BaseModel):
@@ -88,8 +94,15 @@ class Update(UpdateBase):
     id: int
     created_at: datetime
     updated_at: datetime
-    product: Product
+    product_id: int
+
+
+class UpdatePoints(Update):
     points: list["UpdatePoint"]
+
+
+class Updates(BaseModel):
+    data: list[UpdatePoints]
 
 
 update_points_name = Field(

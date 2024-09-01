@@ -21,3 +21,7 @@ class UpdateExample(str, Enum):
         "The Changelog team has been burning the midnight oil to bring you an array of updates, fixes and "
         "enchantments. We believe these changes will take yor changelog creating, to whole new level"
     )
+
+
+class ProductExample:
+    name = "ChangelogAPI"

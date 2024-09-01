@@ -52,7 +52,9 @@ async def get_current_active_user(
 CurrentUser = Annotated[schemas.User, Depends(get_current_active_user)]
 
 
-async def product_get(session: SessionDep, product_id):
+async def product_get(
+    session: SessionDep, product_id: Annotated[int, Path(title="ID of update", ge=1)]
+):
     db_product = handlers.get_product_by_id(session, product_id)
     return db_product
 
@@ -68,7 +70,7 @@ async def product_checked(
     return db_product
 
 
-ProductChecked = Annotated[schemas.Product, Depends(product_checked)]
+ProductCheckedDep = Annotated[schemas.Product, Depends(product_checked)]
 
 
 def not_your_resource(resource_name):

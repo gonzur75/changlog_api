@@ -6,16 +6,16 @@ from app.api.dependencies import SessionDep, UpdateCheckedDep
 router = APIRouter(prefix="/{update_id}/points")
 
 
-@router.get("/", response_model=list[schemas.UpdatePoint])
-async def update_points(update: UpdateCheckedDep):
-    """Retrieve a point"""
-    return update.points
-
-
-@router.post("/", response_model=schemas.UpdatePoint)
-async def create_point(
+@router.post("/", summary="Create point for update")
+async def create_point_for_update(
     session: SessionDep, update: UpdateCheckedDep, point: schemas.UpdatePointCreate
-):
+) -> schemas.UpdatePoint:
+    """
+    Create point for update with:
+    - **name**: point name
+    - **description**: a long description
+    - **type**: a typ of point
+    """
     db_point = models.UpdatePoint(**point.model_dump(), update_id=update.id)
     session.add(db_point)
     session.commit()

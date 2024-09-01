@@ -4,12 +4,13 @@ from app import schemas, models, enums
 from app.api.dependencies import UpdateCheckedDep, SessionDep
 from app.api.routes import update_points
 
+
 router = APIRouter(prefix="/updates", tags=[enums.RouterTags.update])
 router.include_router(update_points.router)
 
 
 @router.get("/{update_id}", summary="Retrieve update")
-async def retrieve_update(update: UpdateCheckedDep) -> schemas.Update:
+async def retrieve_update(update: UpdateCheckedDep) -> schemas.UpdatePoints:
     """Retrieve a update"""
 
     return update
