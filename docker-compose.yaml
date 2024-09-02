@@ -1,25 +1,42 @@
 services:
-  backend:
-    build:
-      context: ./backend
-    ports:
-      - "8000:8000"
-    restart: on-failure
-    volumes:
-      - ./backend:/app
-
   db_changelog:
     image: mysql
     restart: on-failure
     volumes:
-      - my_volume:/var/lib/mysql
+      - db_changelog:/var/lib/mysql
     env_file:
       - ./.env
     environment:
-
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_USER}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DB}
+      - MYSQL_HOST=${MYSQL_HOST}
     ports:
       - "3306:3306"
+    networks:
+      - backend_network
+
+  backend:
+    build:
+      context: ./backend
+    command: uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+    env_file:
+      - ./.env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db_changelog
+    restart: on-failure
+    volumes:
+      - ./backend:/app
+    networks:
+      - backend_network
+
+
+
 
 volumes:
-  my_volume:
+  db_changelog:
+networks:
+  backend_network:
