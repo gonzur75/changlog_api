@@ -1,17 +1,15 @@
-import os
 from datetime import datetime, timedelta
 
 import bcrypt
 import jwt
+from app.modules.config import settings
 from fastapi.security import OAuth2PasswordBearer
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
-ALGORITHM = os.environ.get("ALGORITHM")
-ACCESS_TOKEN_EXPIRE_MINUTES = 300
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
+ACCESS_TOKEN_EXPIRE_MINUTES = settings.ACCESS_TOKEN_EXPIRE_MINUTES
 
-
-API_version_string = "/api/v1/"
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{API_version_string}signin")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.API_version_string}signin")
 
 
 def hash_password(password) -> str:

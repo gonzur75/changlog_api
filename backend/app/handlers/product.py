@@ -1,8 +1,7 @@
 from uuid import UUID
 
-from sqlalchemy.orm import Session
-
 from app import models, schemas
+from sqlalchemy.orm import Session
 
 
 def create_product(session: Session, product: schemas.ProductCreate, user_id: UUID):

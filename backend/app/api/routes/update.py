@@ -1,9 +1,7 @@
-from fastapi import APIRouter
-
-from app import schemas, models, enums
-from app.api.dependencies import UpdateCheckedDep, SessionDep
+from app import enums, models, schemas
+from app.api.dependencies import SessionDep, UpdateCheckedDep
 from app.api.routes import update_points
-
+from fastapi import APIRouter
 
 router = APIRouter(prefix="/updates", tags=[enums.RouterTags.update])
 router.include_router(update_points.router)

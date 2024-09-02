@@ -1,5 +1,3 @@
-from sqlalchemy.orm import Session
-
 from app import models
 from app.handlers.product import (
     create_product,
@@ -9,6 +7,7 @@ from app.handlers.product import (
     get_products_for_user,
 )
 from app.schemas import ProductCreate
+from sqlalchemy.orm import Session
 
 
 def test_get_products_for_user(session: Session, user_factory, product_factory):

@@ -1,15 +1,14 @@
 from collections.abc import Generator
 from typing import Annotated
 
+from app import enums, handlers, models, schemas
+from app.db import engine
+from app.handlers.user import get_user_by_username
+from app.modules.auth import get_username_from_jwt, oauth2_scheme
 from fastapi import Depends, HTTPException, Path
 from jwt import InvalidTokenError
 from sqlalchemy.orm import Session
 from starlette import status
-
-from app import schemas, handlers, models, enums
-from app.db import engine
-from app.handlers.user import get_user_by_username
-from app.modules.auth import get_username_from_jwt, oauth2_scheme
 
 
 def get_db() -> Generator[Session, None, None]:

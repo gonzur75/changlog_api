@@ -1,7 +1,5 @@
+from app.api.routes import point, product, signin, update, user
 from fastapi import APIRouter
-
-from app.api.routes import user, signin, product, update, point
-
 
 api_router = APIRouter()
 

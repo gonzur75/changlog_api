@@ -1,8 +1,7 @@
-from fastapi import FastAPI
-
 from app import models
 from app.api.main import api_router
 from app.db import engine
+from fastapi import FastAPI
 
 description = """
 Changelog API helps you manage your changelogs.
@@ -31,6 +30,7 @@ You will be able to:
 """
 
 models.Base.metadata.create_all(bind=engine)
+
 app = FastAPI(
     title="Changelog API",
     description=description,

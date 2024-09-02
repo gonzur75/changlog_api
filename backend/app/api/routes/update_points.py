@@ -1,7 +1,6 @@
-from fastapi import APIRouter
-
-from app import schemas, models
+from app import models, schemas
 from app.api.dependencies import SessionDep, UpdateCheckedDep
+from fastapi import APIRouter
 
 router = APIRouter(prefix="/{update_id}/points")
 

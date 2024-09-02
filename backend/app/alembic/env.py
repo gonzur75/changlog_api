@@ -1,12 +1,10 @@
 import os
 from logging.config import fileConfig
 
-from dotenv import load_dotenv
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
-
 from alembic import context
 from app.models import Base
+from dotenv import load_dotenv
+from sqlalchemy import engine_from_config, pool
 
 target_metadata = Base.metadata
 
@@ -24,8 +22,8 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 
-from alembic import context # noqa
-from app.models import Base # noqa
+from alembic import context  # noqa
+from app.models import Base  # noqa
 
 target_metadata = Base.metadata
 

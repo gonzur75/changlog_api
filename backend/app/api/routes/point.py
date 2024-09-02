@@ -1,8 +1,6 @@
-from fastapi import APIRouter
-
-from app import schemas, models, enums
+from app import enums, models, schemas
 from app.api.dependencies import PointCheckedDep, SessionDep
-
+from fastapi import APIRouter
 
 router = APIRouter(prefix="/points", tags=[enums.RouterTags.points])
 

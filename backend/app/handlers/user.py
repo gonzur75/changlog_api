@@ -1,7 +1,6 @@
-from sqlalchemy.orm import Session
-
 from app import models, schemas
 from app.modules.auth import hash_password
+from sqlalchemy.orm import Session
 
 
 def get_user_by_username(db: Session, username):

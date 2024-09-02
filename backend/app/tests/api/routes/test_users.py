@@ -1,8 +1,7 @@
+from app import handlers, schemas
 from sqlalchemy.orm import Session
 from starlette import status
 from starlette.testclient import TestClient
-
-from app import handlers, schemas
 
 
 def test_create_user(client: TestClient):

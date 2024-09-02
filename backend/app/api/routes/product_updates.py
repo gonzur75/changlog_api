@@ -1,7 +1,8 @@
 from typing import Annotated
+
+from app import models, schemas
+from app.api.dependencies import ProductCheckedDep, SessionDep
 from fastapi import APIRouter, Query
-from app import schemas, models
-from app.api.dependencies import SessionDep, ProductCheckedDep
 
 router = APIRouter()
 

@@ -1,9 +1,7 @@
-from fastapi import APIRouter, HTTPException
-
-from app import handlers, schemas, enums
+from app import enums, handlers, schemas
 from app.api.dependencies import SessionDep
-
 from app.handlers.user import get_user_by_username
+from fastapi import APIRouter, HTTPException
 
 router = APIRouter(prefix="/users", tags=[enums.RouterTags.users])
 

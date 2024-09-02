@@ -29,3 +29,19 @@ class ProductExample(str, Enum):
 
 class ExceptionMessages(str, Enum):
     not_found = "Resource not found!"
+
+
+class UpdateStatus(str, Enum):
+    IN_PROGRESS = "in_progress"
+    IN_REVIEW = "in_review"
+    SHIPPED = "shipped"
+    DEPRECATED = "deprecated"
+
+
+class UpdatePointType(str, Enum):
+    NEW = "new"
+    IMPROVED = "improved"
+    FIXED = "fixed"
+    UPDATED = "updated"
+    DEPRECATED = "deprecated"
+    REMOVED = "removed"

@@ -1,13 +1,8 @@
+from app import enums, handlers, schemas
+from app.api.dependencies import CurrentUser, ProductCheckedDep, SessionDep
+from app.api.routes import product_updates
 from fastapi import APIRouter
 from starlette import status
-
-from app import schemas, handlers, enums
-from app.api.dependencies import (
-    SessionDep,
-    CurrentUser,
-    ProductCheckedDep,
-)
-from app.api.routes import product_updates
 
 router = APIRouter(prefix="/products", tags=[enums.RouterTags.product])
 

@@ -1,9 +1,8 @@
+from app import enums, handlers, schemas
+from app.modules.config import API_version_string
+from app.tests.utils import get_test_auth_header_and_user
 from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
-
-from app import handlers, schemas, enums
-from app.modules.auth import API_version_string
-from app.tests.utils import get_test_auth_header_and_user
 
 
 def test_change_product_name(

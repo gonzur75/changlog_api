@@ -1,8 +1,8 @@
 import uuid
 from datetime import datetime
-from enum import Enum
 from typing import Optional
 
+from app import enums
 from sqlalchemy import ForeignKey, String, Uuid, func
 from sqlalchemy.orm import (
     DeclarativeBase,
@@ -11,22 +11,6 @@ from sqlalchemy.orm import (
     mapped_column,
     relationship,
 )
-
-
-class UpdateStatus(str, Enum):
-    IN_PROGRESS = "in_progress"
-    IN_REVIEW = "in_review"
-    SHIPPED = "shipped"
-    DEPRECATED = "deprecated"
-
-
-class UpdatePointType(str, Enum):
-    NEW = "new"
-    IMPROVED = "improved"
-    FIXED = "fixed"
-    UPDATED = "updated"
-    DEPRECATED = "deprecated"
-    REMOVED = "removed"
 
 
 class Base(DeclarativeBase):
@@ -81,7 +65,7 @@ class Product(CreatedAt, CommonMixin, Base):
 class Update(CreatedAt, UpdatedAt, CommonMixin, Base):
     title: Mapped[str] = mapped_column(String(50))
     body: Mapped[Optional[str]] = mapped_column(String(255))
-    status: Mapped[UpdateStatus]
+    status: Mapped[enums.UpdateStatus]
     version: Mapped[str] = mapped_column(String(50))
     product_id: Mapped[int] = mapped_column(ForeignKey("products.id"))
 
@@ -95,5 +79,5 @@ class UpdatePoint(CreatedAt, UpdatedAt, CommonMixin, Base):
     name: Mapped[str] = mapped_column(String(50))
     description: Mapped[Optional[str]] = mapped_column(String(255))
     update_id: Mapped[int] = mapped_column(ForeignKey("updates.id"))
-    type: Mapped[UpdatePointType]
+    type: Mapped[enums.UpdatePointType]
     update: Mapped["Update"] = relationship(back_populates="points")

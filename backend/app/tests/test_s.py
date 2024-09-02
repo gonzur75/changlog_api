@@ -1,10 +1,10 @@
+import app.enums
 import factory
+from app import models, schemas
+from app.modules.config import API_version_string
+from app.tests.utils import get_test_auth_header_and_user
 from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
-
-from app import schemas, models
-from app.modules.auth import API_version_string
-from app.tests.utils import get_test_auth_header_and_user
 
 
 def test_delete_point(
@@ -44,7 +44,7 @@ def test_patch_point(
     product = product_factory(owner=user)
     update = update_factory(product=product)
     update_point = update_point_factory(update=update)
-    json = {"name": "Dark Mode", "type": models.UpdatePointType.FIXED.value}
+    json = {"name": "Dark Mode", "type": app.enums.UpdatePointType.FIXED.value}
 
     response = client.patch(
         f"{API_version_string}points/{update_point.id}", headers=headers, json=json
@@ -52,7 +52,7 @@ def test_patch_point(
     assert response.status_code == 200
     print(response.request)
     assert json["name"] in response.json()["name"]
-    assert update_point.type == models.UpdatePointType.FIXED.value
+    assert update_point.type == app.enums.UpdatePointType.FIXED.value
 
 
 def test_retrieve_point(

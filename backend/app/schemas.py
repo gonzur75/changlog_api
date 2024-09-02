@@ -1,11 +1,9 @@
-from pydantic import Field
 from datetime import datetime
 from typing import Annotated
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict
-
-from app import models, enums
+from app import enums
+from pydantic import BaseModel, ConfigDict, Field
 
 product_name = Field(min_length=3, max_length=50, examples=[enums.ProductExample.name])
 
@@ -73,7 +71,7 @@ update_body = Field(max_length=255, examples=[enums.UpdateExample.body])
 class UpdateBase(BaseModel):
     title: Annotated[str, update_title]
     body: Annotated[str | None, update_body] = None
-    status: models.UpdateStatus
+    status: enums.UpdateStatus
     version: Annotated[str, Field(max_length=50, examples=["0.112.2"])]
 
 
@@ -84,7 +82,7 @@ class UpdateCreate(UpdateBase):
 class UpdatePatch(BaseModel):
     title: Annotated[str, update_title] = None
     body: Annotated[str | None, update_body] = None
-    status: models.UpdateStatus = None
+    status: enums.UpdateStatus = None
     version: Annotated[str, Field(max_length=50, examples=["0.112.2"])] = None
 
 
@@ -119,13 +117,13 @@ update_point_description = Field(
 class UpdatePointBase(BaseModel):
     name: Annotated[str, update_points_name]
     description: Annotated[str | None, update_point_description]
-    type: models.UpdatePointType
+    type: enums.UpdatePointType
 
 
 class UpdatePointPatch(BaseModel):
     name: Annotated[str | None, update_points_name] = None
     description: Annotated[str | None, update_point_description] = None
-    type: models.UpdatePointType | None = None
+    type: enums.UpdatePointType | None = None
 
 
 class UpdatePointCreate(UpdatePointBase):

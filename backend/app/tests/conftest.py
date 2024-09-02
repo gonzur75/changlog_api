@@ -2,17 +2,17 @@ from typing import Generator
 
 import factory.alchemy
 import pytest
+from app import models, schemas
+from app.api.dependencies import get_db
+from app.enums import UpdatePointType, UpdateStatus
+from app.handlers import create_user
+from app.main import app
+from app.models import Base
+from app.modules.auth import hash_password
 from faker import Faker
 from sqlalchemy import StaticPool, create_engine
 from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
-
-from app import models, schemas
-from app.api.dependencies import get_db
-from app.handlers import create_user
-from app.main import app
-from app.models import Base, UpdateStatus, UpdatePointType
-from app.modules.auth import hash_password
 
 fake = Faker()
 
