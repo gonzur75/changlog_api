@@ -55,7 +55,7 @@ async def change_product_name(
 
 
 @router.delete("/{product_id}", summary="Delete product")
-async def delete_point(
+async def delete_product(
     stored_product: ProductCheckedDep,
     session: SessionDep,
 ) -> schemas.Message:

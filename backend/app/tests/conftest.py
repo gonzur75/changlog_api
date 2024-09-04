@@ -79,35 +79,45 @@ def product_factory(session, user_factory):
     return ProductFactory
 
 
+class UpdateFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = models.Update
+        sqlalchemy_session_persistence = "commit"
+
+    title = factory.Sequence(lambda n: "Product update %d" % n)
+    body = fake.text(max_nb_chars=255)
+    status = factory.Iterator(UpdateStatus)
+    version = factory.Sequence(lambda n: "0.0.%d" % n)
+    # product = factory.SubFactory(product_factory)
+
+
 @pytest.fixture
 def update_factory(session, product_factory):
-    class UpdateFactory(factory.alchemy.SQLAlchemyModelFactory):
-        class Meta:
-            model = models.Update
-            sqlalchemy_session = session
-            sqlalchemy_session_persistence = "commit"
-
-        title = factory.Sequence(lambda n: "Product update %d" % n)
-        body = fake.text(max_nb_chars=255)
-        status = factory.Iterator(UpdateStatus)
-        version = factory.Sequence(lambda n: "0.0.%d" % n)
-        product = factory.SubFactory(product_factory)
+    UpdateFactory._meta.sqlalchemy_session = session
 
     return UpdateFactory
 
 
+class UpdatePointFactory(factory.alchemy.SQLAlchemyModelFactory):
+    class Meta:
+        model = models.UpdatePoint
+        sqlalchemy_session_persistence = "commit"
+
+    name = factory.Sequence(lambda n: "Update point %d" % n)
+    description = fake.text(max_nb_chars=255)
+    type = factory.Iterator(UpdatePointType)
+
+    update = factory.SubFactory(UpdateFactory)
+    # @classmethod
+    # def _create(cls, model_class, *args, **kwargs):
+    #     async def create_coro(*args, **kwargs):
+    #         return await model_class.create(*args, **kwargs)
+    #
+    #     return create_coro(*args, **kwargs)
+
+
 @pytest.fixture
 def update_point_factory(session, update_factory):
-    class UpdatePointFactory(factory.alchemy.SQLAlchemyModelFactory):
-        class Meta:
-            model = models.UpdatePoint
-            sqlalchemy_session = session
-            sqlalchemy_session_persistence = "commit"
-
-        name = factory.Sequence(lambda n: "Update point %d" % n)
-        description = fake.text(max_nb_chars=255)
-        type = factory.Iterator(UpdatePointType)
-
-        update = factory.SubFactory(update_factory)
+    UpdatePointFactory._meta.sqlalchemy_session = session
 
     return UpdatePointFactory

@@ -2,8 +2,11 @@ import uuid
 from datetime import datetime
 from typing import Optional
 
+from faker import Faker
+
 from app import enums
 from sqlalchemy import ForeignKey, String, Uuid, func
+
 from sqlalchemy.orm import (
     DeclarativeBase,
     Mapped,
@@ -11,6 +14,8 @@ from sqlalchemy.orm import (
     mapped_column,
     relationship,
 )
+
+fake = Faker()
 
 
 class Base(DeclarativeBase):

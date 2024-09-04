@@ -1,6 +1,4 @@
-from app import models
 from app.api.main import api_router
-from app.db import engine
 from fastapi import FastAPI
 
 description = """
@@ -29,7 +27,7 @@ You will be able to:
 * **Read users** (_not implemented_).
 """
 
-models.Base.metadata.create_all(bind=engine)
+# models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Changelog API",
