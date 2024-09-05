@@ -9,7 +9,7 @@ def test_change_product_name(
     client: TestClient, session: Session, product_factory, user_factory
 ):
     header, user = get_test_auth_header_and_user(user_factory)
-    product = product_factory(owner=user)
+    product = product_factory.create_sync(owner=user)
     test_json = {"name": "new name"}
 
     response = client.patch(
@@ -26,7 +26,7 @@ def test_change_product_name(
 def test_retrieve_products(client: TestClient, user_factory, product_factory) -> None:
     headers, user = get_test_auth_header_and_user(user_factory)
 
-    product_factory.create_batch(10, owner=user)
+    product_factory.create_batch_sync(10, owner=user)
     response = client.get(f"{settings.API_version_string}products/", headers=headers)
 
     assert response.status_code == 200
@@ -43,7 +43,7 @@ def test_retrieve_product(client: TestClient, session: Session, user_factory) ->
     assert response_item_not_found.status_code == 404
     assert enums.ExceptionMessages.not_found in response_item_not_found.text
 
-    another_user = user_factory(username="User X")
+    another_user = user_factory.create_sync(username="User X")
 
     product = schemas.ProductCreate(name="Product1")
     product2 = schemas.ProductCreate(name="Product2")
@@ -86,8 +86,8 @@ def test_get_product_updates(
     client: TestClient, user_factory, product_factory, update_factory
 ):
     headers, user = get_test_auth_header_and_user(user_factory)
-    product = product_factory(owner=user)
-    update_factory.create_batch(10, product=product)
+    product = product_factory.create_sync(owner=user)
+    update_factory.create_batch_sync(10, product=product)
     response = client.get(
         f"{settings.API_version_string}products/{product.id}/updates/",
         headers=headers,

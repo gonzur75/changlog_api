@@ -11,8 +11,8 @@ from sqlalchemy.orm import Session
 
 
 def test_get_products_for_user(session: Session, user_factory, product_factory):
-    user = user_factory()
-    product_factory.create_batch(10, owner=user)
+    user = user_factory.create_sync()
+    product_factory.create_batch_sync(10, owner=user)
 
     db_products = get_products_for_user(session=session, user_id=user.id)
 
@@ -22,8 +22,8 @@ def test_get_products_for_user(session: Session, user_factory, product_factory):
 
 
 def test_delete_product(session: Session, product_factory, user_factory) -> None:
-    user = user_factory()
-    product = product_factory(owner=user)
+    user = user_factory.create_sync()
+    product = product_factory.create_sync(owner=user)
 
     assert get_product_by_name(session, name=product.name)
 
@@ -34,7 +34,7 @@ def test_delete_product(session: Session, product_factory, user_factory) -> None
 
 
 def test_create_product(session: Session, user_factory) -> None:
-    user = user_factory()
+    user = user_factory.create_sync()
     db_user = (
         session.query(models.User).filter(models.User.username == user.username).first()
     )

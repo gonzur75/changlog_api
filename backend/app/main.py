@@ -1,3 +1,9 @@
+from contextlib import asynccontextmanager
+from typing import AsyncIterator
+
+from fastapi_cache import FastAPICache
+from fastapi_cache.backends.inmemory import InMemoryBackend
+
 from app.api.main import api_router
 from fastapi import FastAPI
 
@@ -27,7 +33,15 @@ You will be able to:
 * **Read users** (_not implemented_).
 """
 
+
 # models.Base.metadata.create_all(bind=engine)
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    FastAPICache.init(InMemoryBackend())
+    yield
+
 
 app = FastAPI(
     title="Changelog API",
@@ -38,6 +52,7 @@ app = FastAPI(
     },
     license_info={"name": "Beerware License"},
     openapi_url="/api/v1/openapi.json",
+    lifespan=lifespan,
 )
 
 app.include_router(api_router, prefix="/api/v1")

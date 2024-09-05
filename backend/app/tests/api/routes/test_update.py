@@ -1,8 +1,7 @@
-import factory
 from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
 
-from app import models, schemas
+from app import models, schemas, factories
 from app.modules.config import settings
 from app.tests.utils import get_test_auth_header_and_user
 
@@ -11,8 +10,8 @@ def test_delete_update(
     client: TestClient, session: Session, user_factory, product_factory, update_factory
 ):
     headers, user = get_test_auth_header_and_user(user_factory)
-    product = product_factory(owner=user)
-    update = update_factory(product=product)
+    product = product_factory.create_sync(owner=user)
+    update = update_factory.create_sync(product=product)
     response = client.delete(
         f"{settings.API_version_string}updates/{update.id}", headers=headers
     )
@@ -25,8 +24,8 @@ def test_modify_update(
     client: TestClient, user_factory, product_factory, update_factory
 ):
     headers, user = get_test_auth_header_and_user(user_factory)
-    product = product_factory(owner=user)
-    update = update_factory(product=product)
+    product = product_factory.create_sync(owner=user)
+    update = update_factory.create_sync(product=product)
 
     json = {"title": "New Title"}
     response = client.patch(
@@ -42,8 +41,8 @@ def test_retrieve_update(
     client: TestClient, user_factory, update_factory, product_factory
 ):
     headers, user = get_test_auth_header_and_user(user_factory)
-    product = product_factory(owner=user)
-    update = update_factory(product=product)
+    product = product_factory.create_sync(owner=user)
+    update = update_factory.create_sync(product=product)
 
     response = client.get(
         f"{settings.API_version_string}updates/{update.id}", headers=headers
@@ -58,10 +57,9 @@ def test_create_update(
     client: TestClient, user_factory, update_factory, product_factory
 ):
     headers, user = get_test_auth_header_and_user(user_factory)
-    product = product_factory(owner=user)
+    product = product_factory.create_sync(owner=user)
 
-    data = factory.build(dict, FACTORY_CLASS=update_factory)
-    data.pop("product")
+    data = factories.UpdateFactory.process_kwargs()
 
     response = client.post(
         f"{settings.API_version_string}products/{product.id}/updates/",
@@ -76,20 +74,18 @@ def test_add_update_point(
     user_factory,
     product_factory,
     update_factory,
-    update_point_factory,
 ):
     headers, user = get_test_auth_header_and_user(user_factory)
-    product = product_factory(owner=user)
-    update = update_factory(product=product)
-    json = factory.build(dict, FACTORY_CLASS=update_point_factory)
-    json.pop("update")
+    product = product_factory.create_sync(owner=user)
+    update = update_factory.create_sync(product=product)
+    data = factories.UpdatePointFactory.process_kwargs()
 
     response = client.post(
         f"{settings.API_version_string}updates/{update.id}/points/",
         headers=headers,
-        json=json,
+        json=data,
     )
 
     assert response.status_code == 200
     content = response.json()
-    assert content["name"] == json["name"]
+    assert content["name"] == data["name"]

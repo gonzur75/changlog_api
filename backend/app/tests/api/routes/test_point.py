@@ -16,9 +16,9 @@ def test_delete_point(
     session: Session,
 ):
     headers, user = get_test_auth_header_and_user(user_factory)
-    product = product_factory(owner=user)
-    update = update_factory(product=product)
-    update_point = update_point_factory(update=update)
+    product = product_factory.create_sync(owner=user)
+    update = update_factory.create_sync(product=product)
+    update_point = update_point_factory.create_sync(update=update)
 
     response = client.delete(
         f"{settings.API_version_string}points/{update_point.id}", headers=headers
@@ -41,9 +41,9 @@ def test_patch_point(
     update_point_factory,
 ):
     headers, user = get_test_auth_header_and_user(user_factory)
-    product = product_factory(owner=user)
-    update = update_factory(product=product)
-    update_point = update_point_factory(update=update)
+    product = product_factory.create_sync(owner=user)
+    update = update_factory.create_sync(product=product)
+    update_point = update_point_factory.create_sync(update=update)
     json = {"name": "Dark Mode", "type": app.enums.UpdatePointType.FIXED.value}
 
     response = client.patch(
@@ -65,9 +65,9 @@ def test_retrieve_point(
     update_point_factory,
 ):
     headers, user = get_test_auth_header_and_user(user_factory)
-    product = product_factory(owner=user)
-    update = update_factory(product=product)
-    update_point = update_point_factory(update=update)
+    product = product_factory.create_sync(owner=user)
+    update = update_factory.create_sync(product=product)
+    update_point = update_point_factory.create_sync(update=update)
 
     response = client.get(
         f"{settings.API_version_string}points/{update_point.id}", headers=headers
