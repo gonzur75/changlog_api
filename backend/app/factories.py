@@ -1,9 +1,13 @@
 from polyfactory import Ignore, Use
 from polyfactory.factories.sqlalchemy_factory import SQLAlchemyFactory
 
+from faker import Faker
+
 from app import enums
-from app.models import UpdatePoint, fake, Update, Product, User
+from app.models import UpdatePoint, Update, Product, User
 from app.modules.auth import hash_password
+
+fake = Faker()
 
 
 class UpdatePointFactory(SQLAlchemyFactory[UpdatePoint]):

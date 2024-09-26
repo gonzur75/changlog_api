@@ -5,7 +5,7 @@ import pytest
 from app import factories
 from app.api.dependencies import get_db
 from app.main import app
-from app.models import Base
+from app.commons.db import Base
 from faker import Faker
 from sqlalchemy import StaticPool, create_engine
 from sqlalchemy.orm import Session

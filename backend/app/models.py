@@ -1,51 +1,20 @@
 import uuid
-from datetime import datetime
 from typing import Optional
 
-from faker import Faker
 
 from app import enums
-from sqlalchemy import ForeignKey, String, Uuid, func
+from sqlalchemy import ForeignKey, String, Uuid
 
 from sqlalchemy.orm import (
-    DeclarativeBase,
     Mapped,
-    declared_attr,
     mapped_column,
     relationship,
 )
 
-fake = Faker()
+from app.commons.db import Base, CommonMixin, CreatedAt, UpdatedAt
 
 
-class Base(DeclarativeBase):
-    pass
-
-
-class CommonMixin:
-    """define a series of common elements that may be applied to mapped
-    classes using this class as a mixin class."""
-
-    @declared_attr.directive
-    def __tablename__(cls) -> str:
-        return cls.__name__.lower() + "s"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-
-
-class CreatedAt:
-    created_at: Mapped[datetime] = mapped_column(insert_default=datetime.now())
-
-
-class UpdatedAt:
-    updated_at: Mapped[datetime] = mapped_column(
-        insert_default=func.now(), onupdate=func.current_timestamp()
-    )
-
-
-class User(CreatedAt, Base):
-    __tablename__ = "users"
-
+class User(CommonMixin, CreatedAt, Base):
     id: Mapped[uuid.UUID] = mapped_column(
         Uuid(as_uuid=True), primary_key=True, default=uuid.uuid4
     )
@@ -58,6 +27,7 @@ class User(CreatedAt, Base):
 
 
 class Product(CreatedAt, CommonMixin, Base):
+    id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
     owner_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
 
@@ -68,6 +38,7 @@ class Product(CreatedAt, CommonMixin, Base):
 
 
 class Update(CreatedAt, UpdatedAt, CommonMixin, Base):
+    id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column(String(50))
     body: Mapped[Optional[str]] = mapped_column(String(255))
     status: Mapped[enums.UpdateStatus]
@@ -81,6 +52,7 @@ class Update(CreatedAt, UpdatedAt, CommonMixin, Base):
 
 
 class UpdatePoint(CreatedAt, UpdatedAt, CommonMixin, Base):
+    id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
     description: Mapped[Optional[str]] = mapped_column(String(255))
     update_id: Mapped[int] = mapped_column(ForeignKey("updates.id"))
