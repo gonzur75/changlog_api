@@ -1,10 +1,10 @@
 ## Changelog REST API
 
-This application lets you easli manage changelogs for your products.
+This application lets you easly manage changelogs for your products.
 🧐 Features
 
 Here're some of the project's best features:
-- Create user 'http://0.0.0.0:8000/api/v1/
+
 - Listing and creating users 'http://0.0.0.0:8000/api/v1/users'
 - Listing and creating products 'http://0.0.0.0:8000/api/v1/products'
 - Get all updates for your product 'http://127.0.0.1:8000/api/v1/products/{product_id}/updates/'
@@ -19,10 +19,8 @@ Here're some of the project's best features:
 
 -docker-compose
 
--python 3.11
-
 4. Envs
-clon project on to your machine 
+clone project on to your machine 
 
 rename .env-default => .env 
 
